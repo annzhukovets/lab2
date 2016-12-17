@@ -1,0 +1,21 @@
+{
+	"team": {
+	    "name": "Chealsea",
+		"coach": {
+			"firstName": "Antonio" , 
+			"lastName": "Conte", 
+			"age": "47"
+		},
+		"footballers": [
+		    {"firstName": "Thibaut","lastName": "Courtois","position": "Goalkeeper"},
+
+			{"firstName": "Eden", "lastName": "Hazard", "position": "Forward"},
+
+			{"firstName": "David", "lastName": "Luiz", "position": "Defender"},
+
+			{"firstName": "Diego", "lastName": "Costa", "position": "Forward"},
+
+			{"firstName": "John", "lastName": "Terry", "position": "Defender"}
+		],
+	}
+}
