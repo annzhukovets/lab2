@@ -9,7 +9,7 @@ export default class Human {
 
 	get fullName() {
 
-		return this.firstName + this.lastName;
+		return this.firstName + ' ' + this.lastName;
 
 	}
 

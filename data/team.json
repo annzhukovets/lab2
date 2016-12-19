@@ -2,7 +2,7 @@
 	"team": {
 	    "name": "Chealsea",
 		"coach": {
-			"firstName": "Antonio" , 
+			"firstName": "Antonio", 
 			"lastName": "Conte", 
 			"age": "47"
 		},
@@ -16,6 +16,6 @@
 			{"firstName": "Diego", "lastName": "Costa", "position": "Forward"},
 
 			{"firstName": "John", "lastName": "Terry", "position": "Defender"}
-		],
+		]
 	}
 }

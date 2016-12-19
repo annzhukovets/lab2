@@ -66,25 +66,145 @@
 
 	(0, _jquery2.default)().ready(function () {
 
-		function addTeamToHtml(team) {
-			var teamNameTag = (0, _jquery2.default)('<span class="teamName"></span>').text(team.name);
-			var coachNameTag = (0, _jquery2.default)('<span class="coach"></span>').text(team.coach.fullName + ": " + team.coach.age);
-			var footballers = (0, _jquery2.default)('<ul class="footballers"></ul>');
-			team.footballers.forEach(function (footballer) {
-				var footballerTag = (0, _jquery2.default)('<li class=footballer></li>').text(footballer.fullName + ": " + footballer.position);
-				footballers.append(footballerTag);
+		var currentTeam = new _team2.default();
+		var teams = [];
+
+		function addFootballersToHtml(team, footballers, tag) {
+
+			tag.empty();
+
+			footballers.forEach(function (footballer) {
+
+				tag.append(createFootballerTag(team, footballer));
 			});
-			console.log((0, _jquery2.default)('#teams_list'));
-			(0, _jquery2.default)('#teams_list').append((0, _jquery2.default)('<div class="team">')).append(teamNameTag).append(coachNameTag).append(footballers);
 		}
 
-		var teams = [];
+		function createFootballerTag(team, footballer) {
+
+			var footballerTag = (0, _jquery2.default)('<div class="footballer"></div>');
+			var text = (0, _jquery2.default)('<span></span>').text(footballer.fullName + ": " + footballer.position);
+			footballerTag.append(text);
+			var deleteTag = (0, _jquery2.default)('<button type="button" class="btn btn-danger btn-sm" />').append((0, _jquery2.default)('<span class="glyphicon glyphicon-remove">')).click(function (handler) {
+				team.footballers.splice(team.footballers.indexOf(footballer), 1);
+				addFootballersToHtml(team, team.footballers, footballerTag.parent());
+			});
+			footballerTag.append(deleteTag);
+			var editBlock = (0, _jquery2.default)('<div class="form-group"></div>').css('display', 'none');
+			var editFirstName = (0, _jquery2.default)('<input type="text" />');
+			editBlock.append(editFirstName);
+			var editLastName = (0, _jquery2.default)('<input type="text" />');
+			editBlock.append(editLastName);
+			var editPosition = (0, _jquery2.default)('<input type="text" />');
+			editBlock.append(editPosition);
+			var applyButton = (0, _jquery2.default)('<button type="button" class="btn btn-success btn-sm" />').append((0, _jquery2.default)('<span class="glyphicon glyphicon-ok">')).click(function (handler) {
+				footballer.firstName = editFirstName.val();
+				footballer.lastName = editLastName.val();
+				footballer.position = editPosition.val();
+				addFootballersToHtml(team, team.footballers, footballerTag.parent());
+			});
+			editBlock.append(applyButton);
+			var editTag = (0, _jquery2.default)('<button type="button" class="btn btn-warning btn-sm" />').append((0, _jquery2.default)('<span class="glyphicon glyphicon-pencil">')).click(function (handler) {
+				editBlock.css('display', 'block');
+				editFirstName.val(footballer.firstName);
+				editLastName.val(footballer.lastName);
+				editPosition.val(footballer.position);
+				text.css('display', 'none');
+				editTag.css('display', 'none');
+				deleteTag.css('display', 'none');
+			});
+			footballerTag.append(editTag);
+			footballerTag.append(editBlock);
+			return footballerTag;
+		}
+
+		function createCoachTag(coach) {
+
+			var coachTag = (0, _jquery2.default)('<div class="coach"></div>');
+			var text = (0, _jquery2.default)('<span></span>').text(coach.fullName + ": " + coach.age);
+			coachTag.append(text);
+			var editBlock = (0, _jquery2.default)('<div></div>').css('display', 'none');
+			var editFirstName = (0, _jquery2.default)('<input type="text" />');
+			editBlock.append(editFirstName);
+			var editLastName = (0, _jquery2.default)('<input type="text" />');
+			editBlock.append(editLastName);
+			var editAge = (0, _jquery2.default)('<input type="number" />');
+			editBlock.append(editAge);
+			var applyButton = (0, _jquery2.default)('<button type="button" class="btn btn-success btn-sm" />').append((0, _jquery2.default)('<span class="glyphicon glyphicon-ok">')).click(function (handler) {
+				coach.firstName = editFirstName.val();
+				coach.lastName = editLastName.val();
+				coach.age = editAge.val();
+				coachTag.parent().html(createCoachTag(coach));
+			});
+			editBlock.append(applyButton);
+			var editTag = (0, _jquery2.default)('<button type="button" class="btn btn-warning btn-sm" />').append((0, _jquery2.default)('<span class="glyphicon glyphicon-pencil">')).click(function (handler) {
+				editBlock.css('display', 'block');
+				editFirstName.val(coach.firstName);
+				editLastName.val(coach.lastName);
+				editAge.val(coach.age);
+				text.css('display', 'none');
+				editTag.css('display', 'none');
+			});
+			coachTag.append(editTag);
+			coachTag.append(editBlock);
+			return coachTag;
+		}
+
+		function createTeamNameTag(team) {
+
+			var teamNameTag = (0, _jquery2.default)('<h4 class="teamName"></h4>').append((0, _jquery2.default)('<span></span>').text(team.name)).append((0, _jquery2.default)('<button type="button" class="btn btn-danger btn-sm" />').append((0, _jquery2.default)('<span class="glyphicon glyphicon-remove">')).click(function (handler) {
+				teams.splice(teams.indexOf(team), 1);
+				teamNameTag.parent().remove();
+			}));
+			return teamNameTag;
+		}
+
+		(0, _jquery2.default)('#add_footballer').click(function (handler) {
+
+			var footballer = new _footballer2.default((0, _jquery2.default)('#footballer_first_name').val(), (0, _jquery2.default)('#footballer_second_name').val(), (0, _jquery2.default)('#footballer_position').val());
+			(0, _jquery2.default)('#footballer_first_name').val("");
+			(0, _jquery2.default)('#footballer_second_name').val("");
+			(0, _jquery2.default)('#footballer_position').val("");
+			currentTeam.addFootballer(footballer);
+			(0, _jquery2.default)('#current_footballers').append(createFootballerTag(currentTeam, footballer));
+		});
+
+		(0, _jquery2.default)('#add_coach').click(function (handler) {
+
+			var coach = new _coach2.default((0, _jquery2.default)('#coach_first_name').val(), (0, _jquery2.default)('#coach_second_name').val(), (0, _jquery2.default)('#coach_age').val());
+			(0, _jquery2.default)('#coach_first_name').val("");
+			(0, _jquery2.default)('#coach_second_name').val("");
+			(0, _jquery2.default)('#coach_age').val("");
+			(0, _jquery2.default)('#inputs_coach').css('display', 'none');
+			currentTeam.coach = coach;
+			(0, _jquery2.default)('#current_coach').html(createCoachTag(coach));
+		});
+
+		(0, _jquery2.default)('#add_team').click(function (handler) {
+			currentTeam.name = (0, _jquery2.default)('#team_name').val();
+			(0, _jquery2.default)('#team_name').val("");
+			(0, _jquery2.default)('#current_footballers').empty();
+			(0, _jquery2.default)('#current_coach').empty();
+			(0, _jquery2.default)('#inputs_coach').css('display', 'block');
+			addTeamToHtml(currentTeam);
+			currentTeam = new _team2.default();
+		});
+
+		function addTeamToHtml(team) {
+			var teamNameTag = createTeamNameTag(team);
+			var coachNameTag = (0, _jquery2.default)('<div class="coach-wrapper"></div>').html(createCoachTag(team.coach));
+			var footballers = (0, _jquery2.default)('<div class="footballers"></div>');
+			team.footballers.forEach(function (footballer) {
+				var footballerTag = createFootballerTag(team, footballer);
+				footballers.append(footballerTag);
+			});
+			var teamTag = (0, _jquery2.default)('<div class="team">').append(teamNameTag).append(coachNameTag).append(footballers);
+			(0, _jquery2.default)('#teams_list').append(teamTag);
+		}
 
 		_jquery2.default.ajax({
 			type: "GET",
 			url: "../data/team.json",
 			success: function success(data) {
-				console.log(data);
 				var team = new _team2.default(data.team.name);
 				team.coach = new _coach2.default(data.team.coach.firstName, data.team.coach.lastName, data.team.coach.age);
 				data.team.footballers.forEach(function (footballer) {
@@ -92,15 +212,13 @@
 					var footb = new _footballer2.default(footballer.firstName, footballer.lastName, footballer.position);
 					team.addFootballer(footb);
 				});
-				console.log(team);
-				addTeamToHtml(team);
+				addTeamToHtml(team, teams.length);
+				teams.push(team);
 			},
 			error: function error(err) {
 				console.log(err);
 			}
 		});
-
-		console.log((0, _jquery2.default)("#d").text());
 	});
 
 /***/ },
@@ -147,7 +265,7 @@
 /* 2 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
@@ -166,10 +284,10 @@
 		}
 
 		_createClass(Human, [{
-			key: "fullName",
+			key: 'fullName',
 			get: function get() {
 
-				return this.firstName + this.lastName;
+				return this.firstName + ' ' + this.lastName;
 			}
 		}]);
 

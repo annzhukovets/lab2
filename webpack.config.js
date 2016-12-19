@@ -1,4 +1,4 @@
-var config = {
+module.exports = {
 	entry: './js/script.js',
 	output: {
 		filename: './bundle.js',
@@ -16,6 +16,4 @@ var config = {
 		    }
 		]
 	}
-}
-
-module.exports = config;
+};
